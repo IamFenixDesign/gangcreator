@@ -11,7 +11,7 @@
         <td>${m.citizenid}</td>
         <td>${m.grade}</td>
         <td>${nowL(m.added_at)}</td>
-        <td><button class="small" data-info="${m.citizenid}" title="Ver info">ℹ️</button></td>
+        <td><button class="small" data-info="${m.citizenid}" title="Ver info"><i class="fa-solid fa-circle-info"></i></button></td>
         <td>
           <button data-cid="${m.citizenid}" class="danger small" data-i18n="remove">
             ${locales?.t?.('remove') ?? 'Remove'}

@@ -646,7 +646,7 @@ window.addEventListener('message', function(event) {
           tr.innerHTML = `
             <td>
               <span class="color-dot" style="background:${g.color||'#7e22ce'}"></span>
-              <button class="btn-edit-gang" title="Editar gang" aria-label="Editar gang">✎</button>
+              <button class="btn-edit-gang" title="Editar gang" aria-label="Editar gang"><i class="fa-solid fa-pen-to-square"></i></button>
             </td>
             <td>${g.name}</td>
             <td>${g.label}</td>
@@ -681,7 +681,7 @@ window.addEventListener('message', function(event) {
         row.innerHTML = `
           <input class="rc-ing-item" type="text" placeholder="item (ej. metalscrap)" value="${initial.item||''}" style="flex:1;" />
           <input class="rc-ing-amount" type="number" min="1" value="${initial.amount||1}" style="width:120px; margin-left:8px;" />
-          <button class="rc-ing-del danger" title="Eliminar" style="margin-left:8px;">×</button>
+          <button class="rc-ing-del danger" title="Eliminar" aria-label="Eliminar" style="margin-left:8px;"><i class="fa-solid fa-trash"></i></button>
         `;
         row.querySelector('.rc-ing-del').addEventListener('click', ()=> row.remove());
         list.appendChild(row);

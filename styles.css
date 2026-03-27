@@ -81,10 +81,41 @@ body {
   font-family: Segoe UI, system-ui, sans-serif;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
-  /* Evita scroll de la página cuando el contenido interno cambia (NUI). */
-  overflow: hidden;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  overflow: auto;
+  background:
+    radial-gradient(circle at top left, rgba(0, 183, 255, 0.20), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(126, 34, 206, 0.22), transparent 30%),
+    linear-gradient(135deg, #061018 0%, #0b1420 38%, #111827 100%);
+  background-attachment: fixed;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: auto;
+  width: 32rem;
+  height: 32rem;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: .28;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::before {
+  top: -8rem;
+  left: -8rem;
+  background: rgba(0, 183, 255, 0.35);
+}
+
+body::after {
+  right: -10rem;
+  bottom: -10rem;
+  background: rgba(168, 85, 247, 0.30);
 }
 
 /* ========= Locale-specific typography ========= */
@@ -102,14 +133,12 @@ html[lang="ru"] body {
 
 /* root */
 #app {
-  width: 100%;
+  width: min(100%, 1400px);
   max-width: 1400px;
-
-  /* Como estaba originalmente: centrado y draggable */
   position: fixed;
   left: 50%;
-  top: 20px;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10;
 }
 
@@ -132,18 +161,16 @@ html[lang="ru"] body {
 .window {
   width: 100%;
   min-height: 0;
-
-  /* Como estaba originalmente */
   height: auto;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 48px);
   overflow: auto;
-
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius);
+  border-radius: 20px;
 }
 
 /* Ocultar scrollbar visible (mantener rueda) también en la ventana principal */
@@ -3025,4 +3052,44 @@ body.sidebar-mode.sidebar-expanded .tabs .tab span{
   transform: translateY(-1px);
   background: var(--update-card-button-hover-bg, var(--update-card-button-bg, var(--btn-hover, var(--btn-bg, rgba(255, 255, 255, 0.12)))));
   border-color: var(--update-card-button-hover-border, var(--update-card-button-border, var(--accent, var(--border, rgba(255, 255, 255, 0.16)))));
+}
+
+
+@media (max-width: 900px) {
+  body {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  #app {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .window {
+    max-height: calc(100vh - 24px);
+    border-radius: 16px;
+  }
+}
+
+.titlebar-controls > button,
+.btn-edit-gang,
+.rc-ing-del,
+#theme-trash,
+#info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+}
+
+.btn-edit-gang i,
+.rc-ing-del i,
+#theme-trash i,
+#info-btn i {
+  pointer-events: none;
 }
