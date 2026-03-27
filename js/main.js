@@ -646,7 +646,7 @@ window.addEventListener('message', function(event) {
           tr.innerHTML = `
             <td>
               <span class="color-dot" style="background:${g.color||'#7e22ce'}"></span>
-              <button class="btn-edit-gang" title="Editar gang" aria-label="Editar gang"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn-edit-gang" title="Editar gang" aria-label="Editar gang"><span class="icon-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span></button>
             </td>
             <td>${g.name}</td>
             <td>${g.label}</td>
@@ -681,7 +681,7 @@ window.addEventListener('message', function(event) {
         row.innerHTML = `
           <input class="rc-ing-item" type="text" placeholder="item (ej. metalscrap)" value="${initial.item||''}" style="flex:1;" />
           <input class="rc-ing-amount" type="number" min="1" value="${initial.amount||1}" style="width:120px; margin-left:8px;" />
-          <button class="rc-ing-del danger" title="Eliminar" aria-label="Eliminar" style="margin-left:8px;"><i class="fa-solid fa-trash"></i></button>
+          <button class="rc-ing-del danger" title="Eliminar" aria-label="Eliminar" style="margin-left:8px;"><span class="icon-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></span></button>
         `;
         row.querySelector('.rc-ing-del').addEventListener('click', ()=> row.remove());
         list.appendChild(row);

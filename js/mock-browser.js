@@ -402,70 +402,11 @@
     } catch (_) {}
     return nativeFetch(input, init);
   };
-
-  function addPreviewPanel() {
-    const panel = document.createElement('div');
-    panel.id = 'gc-browser-preview-panel';
-    panel.innerHTML = `
-      <div class="gc-browser-preview-title">Browser Preview</div>
-      <div class="gc-browser-preview-actions">
-        <button type="button" data-action="toggle">Show/Hide UI</button>
-        <button type="button" data-action="update">Toggle update popup</button>
-        <button type="button" data-action="reset">Reset mock data</button>
-      </div>
-      <small>Everything saves in this browser via localStorage.</small>
-    `;
-    document.body.appendChild(panel);
-    panel.addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-action]');
-      if (!btn) return;
-      const action = btn.dataset.action;
-      if (action === 'toggle') {
-        const app = document.getElementById('app');
-        const visible = app?.classList.contains('hidden');
-        window.dispatchEvent(new MessageEvent('message', { data: { action: 'visible', value: !!visible } }));
-      } else if (action === 'update') {
-        const db = loadDb();
-        db.updateStatus.hasUpdate = !db.updateStatus.hasUpdate;
-        saveDb(db);
-        window.dispatchEvent(new MessageEvent('message', { data: { action: 'updateStatus', value: db.updateStatus } }));
-      } else if (action === 'reset') {
-        localStorage.removeItem(DB_KEY);
-        const db = loadDb();
-        window.dispatchEvent(new MessageEvent('message', { data: { action: 'updateStatus', value: db.updateStatus } }));
-        window.dispatchEvent(new MessageEvent('message', { data: { action: 'visible', value: true } }));
-      }
     });
   }
 
   const style = document.createElement('style');
   style.textContent = `
-    #gc-browser-preview-panel {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 99999;
-      background: rgba(15, 23, 42, 0.92);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
-      padding: 12px;
-      width: 260px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-      backdrop-filter: blur(8px);
-      font-family: Inter, Arial, sans-serif;
-    }
-    #gc-browser-preview-panel .gc-browser-preview-title { font-weight: 700; margin-bottom: 8px; }
-    #gc-browser-preview-panel .gc-browser-preview-actions { display: grid; gap: 8px; margin-bottom: 8px; }
-    #gc-browser-preview-panel button {
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      border-radius: 10px;
-      padding: 8px 10px;
-      cursor: pointer;
-    }
-    #gc-browser-preview-panel small { color: rgba(255,255,255,0.72); display:block; line-height:1.35; }
     body.browser-preview { background: radial-gradient(circle at top, #1e293b 0%, #0f172a 55%, #020617 100%); }
   `;
   document.head.appendChild(style);
@@ -474,7 +415,6 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('browser-preview');
-    addPreviewPanel();
     const db = loadDb();
     setTimeout(() => {
       window.dispatchEvent(new MessageEvent('message', { data: { action: 'updateStatus', value: db.updateStatus } }));

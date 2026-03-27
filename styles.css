@@ -86,9 +86,9 @@ body {
   padding: 24px;
   overflow: auto;
   background:
-    radial-gradient(circle at top left, rgba(0, 183, 255, 0.20), transparent 32%),
-    radial-gradient(circle at bottom right, rgba(126, 34, 206, 0.22), transparent 30%),
-    linear-gradient(135deg, #061018 0%, #0b1420 38%, #111827 100%);
+    radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 32%),
+    radial-gradient(circle at 88% 86%, color-mix(in srgb, var(--accent-strong) 22%, transparent), transparent 30%),
+    linear-gradient(135deg, var(--win-bg) 0%, var(--surface) 44%, var(--surface-2) 100%);
   background-attachment: fixed;
 }
 
@@ -109,13 +109,13 @@ body::after {
 body::before {
   top: -8rem;
   left: -8rem;
-  background: rgba(0, 183, 255, 0.35);
+  background: color-mix(in srgb, var(--accent) 36%, transparent);
 }
 
 body::after {
   right: -10rem;
   bottom: -10rem;
-  background: rgba(168, 85, 247, 0.30);
+  background: color-mix(in srgb, var(--accent-strong) 30%, transparent);
 }
 
 /* ========= Locale-specific typography ========= */
@@ -3092,4 +3092,26 @@ body.sidebar-mode.sidebar-expanded .tabs .tab span{
 #theme-trash i,
 #info-btn i {
   pointer-events: none;
+}
+
+
+.icon-svg{
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+
+.icon-svg svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+  stroke: currentColor;
+}
+
+.btn-edit-gang .icon-svg,
+.rc-ing-del .icon-svg{
+  width: 15px;
+  height: 15px;
 }
