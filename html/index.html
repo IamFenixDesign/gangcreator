@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="title">Gang Creator</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link id="theme-css" rel="stylesheet" href="themes/darkblue.css" />
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+<body>
+  <div id="app" class="hidden">
+    <div class="window" role="application" aria-label="Gang Creator">
+
+      <header class="titlebar">
+        <div class="titlebar-brand">
+          <h1 data-i18n="title">Gang Creator</h1>
+          <div id="update-indicator" 
+              class="update-indicator hidden" 
+              title="Nueva actualización disponible" 
+              aria-live="polite" 
+              role="button" 
+              tabindex="0" 
+              aria-haspopup="dialog" 
+              aria-controls="update-popup-card">
+
+            <i class="fa-solid fa-download"></i>
+          </div>
+          <div id="update-popup-card" class="update-popup-card hidden" role="dialog" aria-modal="false" aria-labelledby="update-popup-title">
+            <div class="update-popup-head">
+              <span id="update-popup-title" class="update-popup-title">New update available</span>
+              <button id="update-popup-close" type="button" class="update-popup-close" aria-label="Cerrar">×</button>
+            </div>
+            <div id="update-popup-body" class="update-popup-body"></div>
+          </div>
+        </div>
+
+        <div id="selected-gang" class="selected-gang hidden" aria-live="polite"></div>
+
+        <div class="titlebar-controls">
+          <button id="info-btn" type="button" title="Información (creador, redes y versiones)" aria-haspopup="dialog" aria-controls="info-modal">ℹ️</button>
+          <select id="lang-switcher">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="it">Italiano</option>
+            <option value="pr">Português</option>
+            <option value="ja">日本語</option>
+            <option value="ru">Русский</option>
+            <option value="zh">中国人s</option>
+            <option value="de">Deutsch</option>
+            <option value="nl">Nederlands</option>
+          </select>
+          <div class="select-wrap">
+            <select id="theme-switcher" title="Theme">
+              <option value="darkblue">Dark Blue Gray</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="purple">Purple</option>
+              <option value="forest">Forest</option>
+              <option value="ocean">Ocean</option>
+              <option value="import" data-i18n="theme_import">Importar theme...</option>
+            </select>
+          </div>
+          <input id="theme-import" type="file" accept=".css" class="hidden" />
+          <button id="theme-trash" type="button" title="Borrar theme guardado" aria-label="Borrar theme" data-i18n="theme_delete">🗑</button>
+          <div class="sidebar-toggle" title="Menú lateral" data-i18n-title="sidebar_menu_toggle_title">
+            <span data-i18n="sidebar_menu">Menú lateral</span>
+            <label class="ui-switch" for="sidebar-mode-switch">
+              <input id="sidebar-mode-switch" type="checkbox" />
+              <span class="ui-switch-slider"></span>
+            </label>
+          </div>
+          <button id="close" type="button" aria-label="Cerrar" data-i18n-aria-label="close">×</button>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Navegación principal" data-i18n-aria-label="navigation_primary">
+        <button class="tab active" data-tab="gangs" type="button"
+          aria-controls="tab-gangs" aria-selected="true">
+          <i class="fa-solid fa-list"></i> <span data-i18n="tab_gangs">List</span></button>
+
+        <div id="gang-nav-tools" class="gang-nav-tools hidden">
+          <div class="quick-nav-dropdown">
+            <button id="gang-tab-dropdown-toggle" class="tab quick-nav-tab" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <i id="gang-tab-dropdown-icon" class="fa-solid fa-grid-2"></i>
+              <span id="gang-tab-dropdown-label" data-i18n="gang_sections">Secciones</span>
+              <i class="fa-solid fa-chevron-down quick-nav-caret"></i>
+            </button>
+
+            <div id="gang-tab-dropdown-menu" class="quick-nav-dropdown-menu hidden" role="listbox" aria-label="Secciones de la gang" data-i18n-aria-label="gang_sections_menu_aria">
+              <button class="quick-nav-option" type="button" data-tab="ranks">
+                <i class="fa-solid fa-ranking-star"></i><span data-i18n="tab_ranks">Rangos</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="members">
+                <i class="fa-solid fa-users"></i><span data-i18n="tab_members">Miembros</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="mm">
+                <i class="fa-solid fa-user-gear"></i><span data-i18n="tab_member_menus">Member Menus</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="stashes">
+                <i class="fa-solid fa-box-open"></i><span data-i18n="tab_stashes">Stashes</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="garages">
+                <i class="fa-solid fa-warehouse"></i><span data-i18n="tab_garages">Garages</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="clothing">
+                <i class="fa-solid fa-shirt"></i><span data-i18n="tab_clothing">Clothing</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="craft">
+                <i class="fa-solid fa-hammer"></i><span data-i18n="tab_craft_stations">Craft</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="recipes">
+                <i class="fa-solid fa-book"></i><span data-i18n="tab_recipes">Recetas</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="shops">
+                <i class="fa-solid fa-store"></i><span data-i18n="tab_gang_shops">Shops</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="zones">
+                <i class="fa-solid fa-map"></i><span data-i18n="tab_zones">Zones</span>
+              </button>
+              <button class="quick-nav-option" type="button" data-tab="peds">
+                <i class="fa-solid fa-user"></i><span data-i18n="tab_peds">Peds</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="quick-nav-search-wrap">
+            <input id="gang-global-search" type="text" placeholder="Buscar en la gang seleccionada..." aria-label="Buscar en la gang seleccionada" data-i18n-placeholder="gang_global_search_placeholder" data-i18n-aria-label="gang_global_search_aria" />
+            <button id="gang-global-search-clear" class="gang-global-search-clear hidden" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" data-i18n-aria-label="gang_global_search_clear" data-i18n-title="gang_global_search_clear">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="gang-global-results" class="gang-global-results hidden" role="listbox" aria-label="Resultados de búsqueda" data-i18n-aria-label="gang_global_search_results"></div>
+          </div>
+        </div>
+
+        <button class="tab guarded" data-tab="ranks" type="button"
+          aria-controls="tab-ranks">
+          <i class="fa-solid fa-ranking-star"></i> <span data-i18n="tab_ranks">Rangos</span></button>
+
+        <button class="tab guarded" data-tab="members" type="button"
+          aria-controls="tab-members">
+          <i class="fa-solid fa-users"></i> <span data-i18n="tab_members">Miembros</span></button>
+
+        <button class="tab guarded" data-tab="mm" type="button"
+          aria-controls="tab-mm">
+          <i class="fa-solid fa-user-gear"></i> <span data-i18n="tab_member_menus">Member Menus</span></button>
+
+        <button class="tab guarded" data-tab="stashes" type="button"
+          aria-controls="tab-stashes">
+          <i class="fa-solid fa-box-open"></i> <span data-i18n="tab_stashes">Stashes</span></button>
+
+        <button class="tab guarded" data-tab="garages" type="button"
+          aria-controls="tab-garages">
+          <i class="fa-solid fa-warehouse"></i> <span data-i18n="tab_garages">Garages</span></button>
+
+        <button class="tab guarded" data-tab="clothing" type="button"
+          aria-controls="tab-clothing">
+          <i class="fa-solid fa-shirt"></i> <span data-i18n="tab_clothing">Clothing</span></button>
+
+        <button class="tab guarded" data-tab="craft" type="button"
+          aria-controls="tab-craft">
+          <i class="fa-solid fa-hammer"></i> <span data-i18n="tab_craft_stations">Craft</span></button>
+
+        <button class="tab guarded" data-tab="recipes" type="button"
+          aria-controls="tab-recipes">
+          <i class="fa-solid fa-book"></i> <span data-i18n="tab_recipes">Recetas</span></button>
+
+        <button class="tab guarded" data-tab="shops" type="button"
+          aria-controls="tab-shops">
+          <i class="fa-solid fa-store"></i> <span data-i18n="tab_gang_shops">Shops</span></button>
+
+        <button class="tab guarded" data-tab="zones" type="button"
+          aria-controls="tab-zones">
+          <i class="fa-solid fa-map"></i> <span data-i18n="tab_zones">Zones</span></button>
+
+        <button class="tab guarded" data-tab="peds" type="button"
+          aria-controls="tab-peds">
+          <i class="fa-solid fa-user"></i> <span data-i18n="tab_peds">Peds</span></button>
+      </nav>
+
+      
+
+      <main class="tab-content" id="tab-gangs" role="tabpanel" aria-labelledby="gangs-tab">
+        <section class="split-layout" aria-labelledby="gc-title">
+          <div class="list-panel">
+            <div class="toolbar" role="region" aria-label="Búsqueda y acciones">
+              <input id="search" type="text"
+                placeholder="Buscar por nombre o etiqueta..."
+                aria-label="Buscar gangs"
+                data-i18n-placeholder="search_placeholder" />
+            </div>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_color">Color</th>
+                  <th data-i18n="th_name">Nombre</th>
+                  <th data-i18n="th_label">Etiqueta</th>
+                  <th data-i18n="th_created">Creada</th>
+                </tr>
+              </thead>
+              <tbody id="gangs-body"></tbody>
+            </table>
+
+            <div class="pager">
+              <button id="prev" data-i18n="prev_page">«</button>
+              <span id="page">1</span>
+              <button id="next" data-i18n="next_page">»</button>
+            </div>
+          </div>
+          <div class="form-panel">
+            <h2 id="gc-title" data-i18n="create_gang">Crear nueva gang</h2>
+
+            <div id="gang-manage" class="hidden"></div>
+
+            <div class="form gang-create-form">
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="a-name" data-i18n="name_unique">Nombre (id único)</label>
+                  <input id="a-name" placeholder="ej. vagos" data-i18n-placeholder="ph_name_example" />
+                </div>
+                <div class="side-element">
+                  <label for="a-color" data-i18n="th_color">Color</label>
+                  <input id="a-color" type="color" value="#7e22ce" />
+                </div>
+              </div>
+
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="a-label" data-i18n="label">Etiqueta</label>
+                  <input id="a-label" placeholder="ej. Vagos" data-i18n-placeholder="ph_label_example" />
+                </div>
+                <div class="side-element">
+                  <label class="visually-hidden" data-i18n="create">Crear</label>
+                  <button id="a-create" class="create-btn" type="button" data-i18n="create">Crear</button>
+                </div>
+              </div>
+
+              <small id="a-msg" class="muted" aria-live="polite"></small>
+            </div>
+          </div>
+        </section>
+      </main>
+
+
+      <!-- Ped editor: side panel (left) so GangCreator UI can stay as-is -->
+      <div id="ped-editor-modal" class="sidepanel hidden" role="dialog" aria-modal="true" aria-labelledby="pe-title">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="pe-title" data-i18n="ped_editor">Editor de apariencia (NPC)</h3>
+            <button id="pe-close" class="close-btn" type="button" aria-label="Cerrar" data-i18n-aria-label="close">×</button>
+          </div>
+
+          <div class="form">
+            <div class="info-row"><strong data-i18n="ped">Ped:</strong> <span id="pe-name">-</span></div>
+
+            <label for="pe-camera" data-i18n="ped_cam_label">Cámara del preview</label>
+            <select id="pe-camera" class="control" aria-label="Cámara del preview">
+              <option value="face" data-i18n="ped_cam_face">Cara</option>
+              <option value="body" selected data-i18n="ped_cam_body">Cuerpo</option>
+              <option value="legs" data-i18n="ped_cam_legs">Piernas</option>
+              <option value="feet" data-i18n="ped_cam_feet">Pies</option>
+              <option value="full" data-i18n="ped_cam_full">Todo completo</option>
+            </select>
+
+            <div id="pe-sliders" class="pe-sliders" aria-label="Opciones de personalización"></div>
+
+            <div class="row">
+              <button id="pe-random" type="button" data-i18n="randomize">Random</button>
+              <button id="pe-save" type="button" data-i18n="save">Guardar</button>
+              <button id="pe-cancel" class="edit-cancel" type="button" data-i18n="close">Cerrar</button>
+            </div>
+
+            <small id="pe-msg" class="muted" aria-live="polite"></small>
+            <small class="muted" data-i18n="ped_no_copy">Nota: este editor no copia la apariencia de ningún jugador, solo modifica componentes/props del NPC.</small>
+          </div>
+        </div>
+      </div>
+
+      <main class="tab-content" id="tab-members" role="tabpanel" aria-labelledby="members-tab">
+        <section class="split-layout" aria-labelledby="members-title">
+          <div class="list-panel">
+            <div class="toolbar" role="region" aria-label="Gestión de miembros">
+              <input id="search-members" type="text" placeholder="Buscar por CitizenID..." aria-label="Buscar miembros" data-i18n-placeholder="search_members_placeholder" data-i18n-aria-label="search_members_aria" />
+              <button id="btn-refresh-members" type="button" data-i18n="refresh">Refrescar</button>
+            </div>
+
+            <table class="table" aria-label="Tabla de miembros">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Grade</th>
+                  <th scope="col" data-i18n="since">Desde</th>
+                  <th scope="col" data-i18n="info">Info</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="members-body"></tbody>
+            </table>
+
+            <div class="pager">
+              <button id="prev-members">«</button>
+              <span id="page-members">1</span>
+              <button id="next-members">»</button>
+            </div>
+          </div>
+
+          <div class="form-panel">
+            <h2 id="members-title" data-i18n="members">Gestionar miembros</h2>
+
+            <div class="form member-create-form">
+              <div class="input-row">
+                <div class="input-group">
+                  <label for="m-cid">ID</label>
+                  <input id="m-cid" placeholder="ID" aria-label="ID" />
+                </div>
+
+                <div class="input-group">
+                  <label for="m-grade">Grade</label>
+                  <input id="m-grade" type="number" min="0" max="4" value="0" aria-label="Grade" />
+                </div>
+
+                <div class="side-element">
+                  <button id="m-add" class="create-btn" type="button" data-i18n="add_update" aria-label="Añadir o actualizar">
+                    Añadir/Actualizar
+                  </button>
+                </div>
+              </div>
+
+              <small id="members-msg" class="muted" aria-live="polite"></small>
+            </div>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-mm" role="tabpanel" aria-labelledby="mm-tab">
+        <section class="split-layout" aria-labelledby="mm-title">
+          <div class="form-panel">
+            <h2 id="mm-title">
+              <span data-i18n="member_menus">Member Menus</span>
+              <button class="toggle-section" data-target="mm-section" type="button" aria-expanded="true" aria-controls="mm-section">−</button>
+            </h2>
+
+            <div class="section-body" id="mm-section">
+              <div class="form">
+                <!-- Basic -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="mm-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="mm-gang" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+                <label for="mm-prop">Prop model</label>
+                <input id="mm-prop" placeholder="ej. prop_chair_01a" />
+
+                <label for="mm-name" data-i18n="mm_name">Nombre</label>
+                <input id="mm-name" placeholder="nombre único (ej. ballas_miembros)" data-i18n-placeholder="ph_mm_name_example" />
+
+                <label for="mm-label" data-i18n="mm_label">Etiqueta</label>
+                <input id="mm-label" placeholder="Etiqueta visible (ej. Miembros)" data-i18n-placeholder="ph_mm_label_example" />
+
+                <hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+
+                <div class="row">
+                  <input id="mm-h" type="number" placeholder="0" aria-label="Heading" />
+                  <input id="mm-coords" placeholder="x, y, z," aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="mm-pos" type="button" title="Usar posición actual" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button class="btn" id="mm-pick" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Opciones -->
+                <h4 class="subheading" data-i18n="options">Opciones</h4>
+
+                <div class="row">
+                  <input id="mm-radius" type="number" step="0.1" placeholder="radio (1.75)" data-i18n-placeholder="ph_radius" />
+                  <input id="mm-icon" placeholder="icono (fa-solid fa-user-group)" data-i18n-placeholder="ph_icon_users" />
+                  <input id="mm-min" type="number" step="1" placeholder="min_grade (0)" data-i18n-placeholder="ph_min_grade" />
+                </div>
+
+                <div class="row">
+                  <button id="mm-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="mm-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="mm-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="mm-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="member_menus_list">Member Menus del gang</h3>
+            <table class="table" aria-label="Tabla de member menus">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="mm_name">Nombre</th>
+                  <th scope="col" data-i18n="mm_label">Etiqueta</th>
+                  <th scope="col" data-i18n="mm_pos">Coords</th>
+                  <th scope="col" data-i18n="mm_radius">Radio</th>
+                  <th scope="col" data-i18n="th_icon">Icono</th>
+                  <th scope="col" data-i18n="th_min_grade">Min Grade</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="mm-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <main class="tab-content hidden" id="tab-ranks" role="tabpanel" aria-labelledby="ranks-tab">
+        <section class="split-layout" aria-labelledby="ranks-title">
+          <div class="form-panel">
+            <h2 id="ranks-title">
+              <span data-i18n="ranks">Rangos</span>
+              <button class="toggle-section" data-target="ranks-section" type="button" aria-expanded="true" aria-controls="ranks-section">−</button>
+            </h2>
+            <div class="section-body" id="ranks-section">
+              <div class="form">
+                <label for="r-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="r-gang" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+                <div class="row">
+                  <input id="r-grade" type="number" step="1" placeholder="grade (ej. 0..4)" aria-label="Grade" data-i18n-placeholder="ph_grade_example" />
+                  <input id="r-label" placeholder="Nombre del rango (ej. Soldado)" aria-label="Etiqueta del rango" data-i18n-placeholder="ph_rank_label" />
+                </div>
+                <div class="row">
+                  <button id="r-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="r-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="r-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+                <small id="ranks-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_ranks">Rangos del gang</h3>
+            <table class="table" aria-label="Tabla de rangos">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_grade">Grade</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_created">Creado</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="ranks-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <main class="tab-content hidden" id="tab-stashes" role="tabpanel" aria-labelledby="stashes-tab">
+        <section class="split-layout" aria-labelledby="stashes-title">
+          <div class="form-panel">
+            <h2 id="stashes-title">
+              <span data-i18n="stashes">Stashes</span>
+              <button class="toggle-section" data-target="stashes-section" type="button" aria-expanded="true" aria-controls="stashes-section">−</button>
+            </h2>
+            <div class="section-body" id="stashes-section">
+              <div class="form">
+                <!-- Basic -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="s-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="s-gang" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+                <div class="row">
+                  <div class="input-group" style="flex:1;">
+                    <label for="s-name" data-i18n="stash_name_unique">Nombre stash (único)</label>
+                    <input id="s-name" placeholder="ej. ballas_hq" data-i18n-placeholder="ph_stash_example" />
+                  </div>
+                  <div class="input-group" style="flex:1;">
+                    <label for="s-label" data-i18n="label">Etiqueta</label>
+                    <input id="s-label" placeholder="ej. Stash Ballas HQ" data-i18n-placeholder="ph_stash_label_example" />
+                  </div>
+                </div>
+
+                <label for="s-prop">Prop model</label>
+                <input id="s-prop" placeholder="ej. prop_table_03" />
+
+                <hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+
+                <div class="row">
+                  <input id="s-h" type="number" placeholder="0" aria-label="Heading" />
+                  <input id="s-coords" placeholder="x, y, z" aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="s-pos" type="button" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button id="s-pick" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <div class="row">
+                  <input id="s-radius" type="number" step="0.1" placeholder="1.75" aria-label="Radio" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Opciones -->
+                <h4 class="subheading" data-i18n="options">Opciones</h4>
+
+                <div class="row">
+                  <input id="s-slots" type="number" placeholder="100" aria-label="Slots" data-i18n-placeholder="ph_slots" />
+                  <input id="s-weight" type="number" placeholder="100000" aria-label="Peso" data-i18n-placeholder="ph_weight" />
+                </div>
+
+                <div class="row">
+                  <button id="s-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="s-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="s-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="stash-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_stashes">Stashes del gang</h3>
+            <table class="table" aria-label="Tabla de stashes">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col" data-i18n="th_radius">Radius</th>
+                  <th scope="col" data-i18n="th_slots">Slots</th>
+                  <th scope="col" data-i18n="th_weight">Peso</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="stashes-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <main class="tab-content hidden" id="tab-garages" role="tabpanel" aria-labelledby="garages-tab">
+        <section class="split-layout" aria-labelledby="garages-title">
+          <div class="form-panel">
+            <h2 id="garages-title">
+              <span data-i18n="garages">Garages</span>
+              <button class="toggle-section" data-target="garages-section" type="button" aria-expanded="true" aria-controls="garages-section">−</button>
+            </h2>
+
+            <div class="section-body" id="garages-section">
+              <div class="form">
+                <!-- Basic -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="ga-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="ga-gang" type="text" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+                <div class="row">
+                  <input id="ga-name" type="text" placeholder="e.g. garage_ballas" aria-label="Name" />
+                  <input id="ga-label" type="text" placeholder="e.g. Garage Ballas" aria-label="Label" />
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+                <div class="row">
+                  <input id="ga-h" type="number" step="1" placeholder="0" aria-label="Heading" />
+                  <input id="ga-coords" type="text" placeholder="x, y, z" aria-label="Coordinates" data-i18n-placeholder="ph_coords" />
+                  <button id="ga-pick-pos" type="button" data-i18n="use_current_pos">Use current position</button>
+                  <button id="ga-pick-map" type="button" data-i18n="pick_with_marker">Pick with marker</button>
+                </div>
+
+                <div class="row">
+                  <input id="ga-radius" type="number" step="0.1" placeholder="3.0" aria-label="Radius" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Spawn -->
+                <h4 class="subheading" data-i18n="ga_spawn">Spawn</h4>
+                <div class="row">
+                  <input id="ga-spawn-h" type="number" step="1" placeholder="0" aria-label="Heading spawn" />
+                  <input id="ga-spawn" type="text" placeholder="x, y, z" aria-label="Spawn coordinates" data-i18n-placeholder="ph_coords" />
+                  <button id="ga-spawn-pos" type="button" data-i18n="use_current_pos">Use current position</button>
+                  <button id="ga-spawn-map" type="button" data-i18n="pick_with_marker">Pick with marker</button>
+                </div>
+
+                <hr class="divider" />
+
+                <!-- NPC -->
+                <h4 class="subheading" data-i18n="ga_npc">NPC</h4>
+                <label for="ga-ped" data-i18n="ped">Ped</label>
+                <div class="row">
+                  <input id="ga-ped" type="text" placeholder="a_m_m_business_01" aria-label="Ped" />
+                </div>
+
+                <h4 class="subheading">NPC location (optional)</h4>
+                <div class="row">
+                  <input id="ga-ped-h" type="number" step="1" placeholder="0" aria-label="Heading ped" />
+                  <input id="ga-ped-coords" type="text" placeholder="x, y, z" aria-label="NPC coordinates" data-i18n-placeholder="ph_coords" />
+                  <button id="ga-ped-pos" type="button" data-i18n="use_current_pos">Use current position</button>
+                  <button id="ga-ped-map" type="button" data-i18n="pick_with_marker">Pick with marker</button>
+                </div>
+
+                <div class="row">
+                  <button id="ga-save" type="button" data-i18n="save">Save</button>
+                  <button id="ga-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancel</button>
+                  <button id="ga-delete" class="danger" type="button" data-i18n="delete">Delete</button>
+                </div>
+
+                <small id="garage-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_garages">Gang garages</h3>
+            <table class="table" aria-label="Garages table">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col" data-i18n="spawn_coords">Spawn</th>
+                  <th scope="col" data-i18n="th_radius">Radius</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="garages-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-clothing" role="tabpanel" aria-labelledby="clothing-tab">
+        <section class="split-layout" aria-labelledby="clothing-title">
+          <div class="form-panel">
+            <h2 id="clothing-title">
+              <span data-i18n="clothing">Clothing</span>
+              <button class="toggle-section" data-target="clothing-section" type="button" aria-expanded="true" aria-controls="clothing-section">−</button>
+            </h2>
+
+            <div class="section-body" id="clothing-section">
+              <div class="form">
+                <!-- Basic -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="c-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="c-gang" type="text" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+                <label for="c-name" data-i18n="clothing_name_unique">Nombre de ropa (único)</label>
+                <input id="c-name" type="text" placeholder="ej. ballas_locker" aria-label="Nombre clothing" data-i18n-placeholder="ph_clothing_example" />
+
+                <label for="c-label" data-i18n="label">Etiqueta</label>
+                <input id="c-label" type="text" placeholder="ej. Locker Ballas HQ" aria-label="Etiqueta" data-i18n-placeholder="ph_clothing_label_example" />
+
+                <label for="c-prop" data-i18n="prop">Prop</label>
+                <input id="c-prop" type="text" placeholder="prop_bench_01" aria-label="Prop model" />
+
+                <label for="c-icon" data-i18n="th_icon">Icono</label>
+                <input id="c-icon" type="text" placeholder="fa-solid fa-shirt" aria-label="Icono" data-i18n-placeholder="ph_icon_shirt" />
+
+<hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+                <div class="row">
+                  <input id="c-h" type="number" step="1" placeholder="0" aria-label="Heading" />
+                  <input id="c-coords" type="text" placeholder="x, y, z" aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="c-pos" type="button" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button id="c-pick" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <div class="row">
+                  <input id="c-radius" type="number" step="0.1" placeholder="1.75" aria-label="Radio" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <div class="row">
+                  <button id="c-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="c-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="c-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="clothing-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_clothing">Clothing zones del gang</h3>
+            <table class="table" aria-label="Tabla de clothing zones">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col" data-i18n="th_radius">Radius</th>
+                  <th scope="col" data-i18n="th_icon">Icono</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="clothing-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-craft" role="tabpanel" aria-labelledby="craft-tab">
+        <section class="split-layout" aria-labelledby="craft-title">
+          <div class="form-panel">
+            <h2 id="craft-title">
+              <span data-i18n="craft_stations">Craft Stations</span>
+              <button class="toggle-section" data-target="craft-section" type="button" aria-expanded="true" aria-controls="craft-section">−</button>
+            </h2>
+
+            <div class="section-body" id="craft-section">
+              <div class="form">
+                <!-- Basic -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="cr-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="cr-gang" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+
+	                <label for="cr-name" data-i18n="craft_name_unique">Nombre de craft (único)</label>
+	                <input id="cr-name" type="text" placeholder="ej. ballas_workbench" aria-label="Nombre craft" data-i18n-placeholder="ph_craft_example" />
+
+	                <label for="cr-label" data-i18n="label">Etiqueta</label>
+	                <input id="cr-label" type="text" placeholder="ej. Mesa Ballas" aria-label="Etiqueta craft" data-i18n-placeholder="ph_craft_label_example" />
+
+	                <label for="cr-prop" data-i18n="prop">Prop</label>
+	                <input id="cr-prop" type="text" placeholder="ej. prop_tool_bench" aria-label="Prop model" />
+
+	                <label for="cr-icon" data-i18n="th_icon">Icono</label>
+	                <input id="cr-icon" type="text" placeholder="fa-solid fa-hammer" aria-label="Icono" data-i18n-placeholder="ph_icon_hammer" />
+
+                <hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+                <div class="row">
+                  <input id="cr-h" type="number" placeholder="0" aria-label="Heading" />
+                  <input id="cr-coords" placeholder="x, y, z" aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="cr-pos" type="button" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button id="cr-pick" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <div class="row">
+                  <input id="cr-radius" type="number" step="0.1" placeholder="1.75" aria-label="Radio" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <div class="row">
+                  <button id="cr-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="cr-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="cr-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="craft-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_crafts">Craft stations del gang</h3>
+            <table class="table" aria-label="Tabla de craft stations">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col" data-i18n="th_radius">Radius</th>
+                  <th scope="col" data-i18n="th_icon">Icono</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="craft-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-recipes" role="tabpanel" aria-labelledby="recipes-tab">
+        <section class="split-layout" aria-labelledby="recipes-title">
+          <div class="form-panel">
+            <h2 id="recipes-title">
+              <span data-i18n="recipes">Recipes</span>
+              <button class="toggle-section" data-target="recipes-section" type="button" aria-expanded="true" aria-controls="recipes-section">−</button>
+            </h2>
+
+            <div class="section-body" id="recipes-section">
+              <div class="form">
+                <!-- Básico (mismo estilo que Garages) -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="rc-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="rc-gang" placeholder="ej. ballas" aria-label="Gang" data-i18n-placeholder="ph_gang_example" />
+
+                <div class="input-row">
+                  <div class="input-group">
+                    <label for="rc-name" data-i18n="recipe_name_unique">Nombre de receta (único)</label>
+                    <input id="rc-name" placeholder="ej. knife_ballas" aria-label="Nombre receta" data-i18n-placeholder="ph_recipe_example" />
+                  </div>
+                  <div class="input-group">
+                    <label for="rc-label" data-i18n="label">Etiqueta</label>
+                    <input id="rc-label" placeholder="ej. Cuchillo" aria-label="Etiqueta" data-i18n-placeholder="ph_recipe_label_example" />
+                  </div>
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Station -->
+                <h4 class="subheading" data-i18n="station_optional">Station (opcional)</h4>
+                <input id="rc-station" placeholder="craft name o vacío" aria-label="Station" data-i18n-placeholder="ph_station_optional" />
+
+                <hr class="divider" />
+
+                <!-- Resultado -->
+                <h4 class="subheading" data-i18n="th_result">Result</h4>
+
+                <div class="input-group">
+                  <label for="rc-result" data-i18n="result_item">Objeto resultante</label>
+                  <input id="rc-result" type="text" placeholder="ej. weapon_knife" aria-label="Result item" data-i18n-placeholder="ph_result_item_example" />
+                </div>
+
+                <div class="input-row">
+                  <div class="input-group">
+                    <label for="rc-amount" data-i18n="quantity">Cantidad</label>
+                    <input id="rc-amount" type="number" placeholder="1" min="1" value="1" aria-label="Cantidad" data-i18n-placeholder="ph_quantity" />
+                  </div>
+                  <div class="input-group">
+                    <label for="rc-time" data-i18n="time_ms">Tiempo (ms)</label>
+                    <input id="rc-time" type="number" placeholder="0" min="0" value="0" aria-label="Tiempo (ms)" data-i18n-placeholder="ph_time_ms" />
+                  </div>
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Ingredientes -->
+                <h4 class="subheading" data-i18n="ingredients">Ingredientes</h4>
+                <div id="rc-ingredients-list" class="stack" style="gap:8px;" aria-label="Lista de ingredientes"></div>
+                <button id="rc-add-ing" class="secondary" type="button" style="margin-top:8px;" data-i18n="add_ingredient">+ Añadir ingrediente</button>
+
+                <div class="row" style="margin-top:12px;">
+                  <button id="rc-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="rc-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="rc-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                  <button id="rc-refresh" class="secondary" type="button" data-i18n="refresh">Refrescar</button>
+                </div>
+
+                <small id="recipes-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="recipes_list">Recetas</h3>
+            <table class="table" aria-label="Tabla de recetas">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_result">Result</th>
+                  <th scope="col" data-i18n="th_qty">Qty</th>
+                  <th scope="col" data-i18n="th_station">Station</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="recipes-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-shops" role="tabpanel" aria-labelledby="shops-tab">
+        <section class="split-layout" aria-labelledby="shops-title">
+          <div class="form-panel">
+            <h2 id="shops-title">
+              <span data-i18n="gang_shops">Gang Shops</span>
+              <button class="toggle-section" data-target="shops-section" type="button" aria-expanded="true" aria-controls="shops-section">−</button>
+            </h2>
+
+            <div class="section-body" id="shops-section">
+              <div class="form" role="form" aria-label="Gestión de tiendas del gang">
+                <!-- Básico (mismo layout que Garages) -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="sh-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="sh-gang" type="text" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+                <label for="sh-name" data-i18n="shop_name_unique">Nombre tienda (único)</label>
+                <input id="sh-name" type="text" placeholder="ej. ballas_shop" data-i18n-placeholder="ph_shop_example" />
+
+                <label for="sh-label" data-i18n="label">Etiqueta</label>
+                <input id="sh-label" type="text" placeholder="ej. Vendedor Ballas" data-i18n-placeholder="ph_shop_label_example" />
+                <label for="sh-icon" data-i18n="th_icon">Icono</label>
+                <input id="sh-icon" type="text" placeholder="fa-solid fa-store" data-i18n-placeholder="ph_icon_store" />
+
+                <label for="sh-restock" data-i18n="restock_days">Restock (días)</label>
+                <input id="sh-restock" type="number" placeholder="7" />
+
+                <hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+                <div class="row">
+                  <input id="sh-h" type="number" step="1" placeholder="0" aria-label="Heading" data-i18n-placeholder="ph_number_0" />
+                  <input id="sh-coords" type="text" placeholder="x, y, z" aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="sh-pick-pos" type="button" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button id="sh-pick-map" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <div class="row">
+                  <input id="sh-radius" type="number" step="0.1" placeholder="1.75" aria-label="Radio" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <hr class="divider" />
+
+                <!-- NPC -->
+                <h4 class="subheading" data-i18n="ga_npc">NPC</h4>
+                <label for="sh-model" data-i18n="npc_model">NPC model</label>
+                <div class="row">
+                  <input id="sh-model" type="text" placeholder="mp_m_shopkeep_01" aria-label="NPC model" data-i18n-placeholder="ph_npc_model" />
+                </div>
+
+                <h4 class="subheading" data-i18n="scenario_optional">Scenario (opcional)</h4>
+                <div class="row">
+                  <input id="sh-scenario" type="text" placeholder="WORLD_HUMAN_AA_COFFEE" aria-label="Scenario" data-i18n-placeholder="ph_scenario_optional" />
+                </div>
+
+                <div class="row">
+                  <button id="sh-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="sh-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="sh-remove" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="shops-msg" class="muted" aria-live="polite"></small>
+
+                <hr class="divider" />
+
+                <!-- Items -->
+                <h4 class="subheading" data-i18n="shop_items">Items</h4>
+                <label for="si-item" data-i18n="item">Item</label>
+                <input id="si-item" type="text" placeholder="weapon_knife" aria-label="Item" data-i18n-placeholder="ph_item_example" />
+
+                <label for="si-label" data-i18n="th_label">Label</label>
+                <input id="si-label" type="text" placeholder="Cuchillo" aria-label="Label" data-i18n-placeholder="ph_item_label_example" />
+
+                <div class="row">
+                  <div class="input-group">
+                    <label for="si-price" data-i18n="price">Precio</label>
+                    <input id="si-price" type="number" placeholder="0" aria-label="Precio" data-i18n-placeholder="ph_number_0" />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="si-max" data-i18n="max">Max</label>
+                    <input id="si-max" type="number" placeholder="0" aria-label="Max" data-i18n-placeholder="ph_number_0" />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="si-stock" data-i18n="stock">Stock</label>
+                    <input id="si-stock" type="number" placeholder="0" aria-label="Stock" data-i18n-placeholder="ph_number_0" />
+                  </div>
+
+                  <div class="side-element">
+                    <button id="si-save" type="button" data-i18n="save_item">Guardar item</button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <button id="sh-restock-now" type="button" data-i18n="restock_now">Restock ahora</button>
+                </div>
+
+                <small id="shopitems-msg" class="muted" aria-live="polite"></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_shops_list">Tiendas del gang</h3>
+            <table class="table" aria-label="Tabla de gang shops">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col" data-i18n="npc">NPC</th>
+                  <th scope="col" data-i18n="th_radius">Radius</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="shops-body"></tbody>
+            </table>
+
+            <h3 style="margin-top:12px;" data-i18n="shop_items_list">Items de la tienda</h3>
+            <table class="table" aria-label="Tabla de items">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="item">Item</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="price">Precio</th>
+                  <th scope="col" data-i18n="stock">Stock</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="shop-items-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-zones" role="tabpanel" aria-labelledby="zones-tab">
+        <section class="split-layout" aria-labelledby="zones-title">
+          <div class="form-panel">
+            <h2 id="zones-title">
+              <span data-i18n="zones">Zones</span>
+              <button class="toggle-section" data-target="zones-section" type="button" aria-expanded="true" aria-controls="zones-section">−</button>
+            </h2>
+
+            <div class="section-body" id="zones-section">
+              <div class="form">
+
+                <!-- Basic -->
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="z-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="z-gang" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+				<label for="z-name" data-i18n="zone_name">Nombre de la zona</label>
+				<input id="z-name" placeholder="ej. ballas_territory" aria-label="Nombre zona" data-i18n-placeholder="ph_zone_example" />
+
+				<label for="z-label" data-i18n="zone_label">Etiqueta visible</label>
+				<input id="z-label" placeholder="ej. Territorio Ballas" aria-label="Etiqueta" data-i18n-placeholder="ph_zone_label_example" />
+
+                <hr class="divider" />
+
+                <!-- Location -->
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+                <div class="row">
+                  <input id="z-coords" placeholder="x, y, z" aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="z-pos" type="button" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button id="z-pick" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <div class="row">
+                  <input id="z-radius" type="number" step="0.1" placeholder="25.0" aria-label="Radio" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <hr class="divider" />
+
+                <!-- Mensajes -->
+                <h4 class="subheading" data-i18n="zone_messages">Mensajes</h4>
+
+                <label for="z-msg-member" data-i18n="zone_msg_member">Mensaje si eres miembro</label>
+                <input id="z-msg-member" placeholder="Entraste a tu territorio" data-i18n-placeholder="ph_zone_msg_member" />
+
+                <label for="z-msg-nonmember" data-i18n="zone_msg_nonmember">Mensaje si NO eres miembro</label>
+                <input id="z-msg-nonmember" placeholder="Zona restringida" data-i18n-placeholder="ph_zone_msg_nonmember" />
+
+                <div class="row">
+                  <button id="z-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="z-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="z-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="zones-msg" class="muted" aria-live="polite"></small>
+</div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_zones">Zonas del gang</h3>
+            <table class="table" aria-label="Tabla de zonas">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col" data-i18n="th_radius">Radius</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="zones-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <main class="tab-content hidden" id="tab-peds" role="tabpanel" aria-labelledby="peds-tab">
+        <section class="split-layout" aria-labelledby="peds-title">
+          <div class="form-panel">
+            <h2 id="peds-title">
+              <span data-i18n="peds">Peds</span>
+              <button class="toggle-section" data-target="peds-section" type="button" aria-expanded="true" aria-controls="peds-section">−</button>
+            </h2>
+
+            <div class="section-body" id="peds-section">
+              <div class="form">
+                <h4 class="subheading" data-i18n="ga_basic">Basic</h4>
+
+                <label for="p-gang" data-i18n="gang_autofilled">Gang (se completa al seleccionar)</label>
+                <input id="p-gang" placeholder="ej. ballas" data-i18n-placeholder="ph_gang_example" />
+
+                <label for="p-name" data-i18n="ped_name">NPC Entry Name (unique_id)</label>
+                <input id="p-name" placeholder="e.g. npc_entrada" data-i18n-placeholder="ph_ped_name" />
+
+                <label for="p-label" data-i18n="ped_label">Guard Visible Label</label>
+                <input id="p-label" placeholder="e.g. Guardia" data-i18n-placeholder="ph_ped_label" />
+
+                <label for="p-model" data-i18n="model">Model</label>
+                <input id="p-model" placeholder="mp_m_freemode_01" />
+
+                <hr class="divider" />
+
+                <h4 class="subheading" data-i18n="ga_location">Location</h4>
+                <div class="row">
+                  <input id="p-coords" placeholder="x, y, z" aria-label="Coordenadas" data-i18n-placeholder="ph_coords" />
+                  <button id="p-pos" type="button" data-i18n="use_current_pos">Usar posición actual</button>
+                  <button id="p-pick" type="button" data-i18n="pick_with_marker">Elegir con marcador</button>
+                </div>
+
+                <div class="row">
+                  <input id="p-h" type="number" step="0.1" placeholder="0" aria-label="Heading" />
+                  <input id="p-radius" type="number" step="0.1" placeholder="1.75" aria-label="Radio" data-i18n-placeholder="ph_radius" />
+                </div>
+
+                <hr class="divider" />
+
+                <h4 class="subheading" data-i18n="ped_behavior">Comportamiento</h4>
+                <label for="p-scenario" data-i18n="scenario">Scenario (opcional)</label>
+                <input id="p-scenario" placeholder="WORLD_HUMAN_GUARD_STAND" />
+
+                <hr class="divider" />
+
+                <h4 class="subheading" data-i18n="ped_reactions">Reactions</h4>
+                <label for="p-reaction-radius" data-i18n="ped_reaction_radius">Reaction Detection Radius (optional)</label>
+                <input id="p-reaction-radius" type="number" step="0.1" placeholder="6.0" aria-label="Reaction detection radius" data-i18n-placeholder="ph_ped_reaction_radius" />
+
+                <label for="p-reaction-scenario" data-i18n="ped_reaction_scenario">Reaction Scenario (optional)</label>
+                <input id="p-reaction-scenario" placeholder="WORLD_HUMAN_STAND_IMPATIENT" aria-label="Reaction scenario" data-i18n-placeholder="ph_ped_reaction_scenario" />
+
+                <hr class="divider" />
+
+                <div class="row">
+                  <input id="p-icon" placeholder="fa-user" aria-label="Icon" />
+                </div>
+
+                <div class="row">
+                  <button id="p-save" type="button" data-i18n="save">Guardar</button>
+                  <button id="p-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+                  <button id="p-del" class="danger" type="button" data-i18n="delete">Eliminar</button>
+                </div>
+
+                <small id="peds-msg" class="muted" aria-live="polite"></small>
+                <small class="muted" data-i18n="ped_tip">Tip: interactúa con el NPC en el mundo para abrir el editor de apariencia y guardarla en SQL.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="list-panel">
+            <h3 style="margin-top:0;" data-i18n="gang_peds">Peds del gang</h3>
+            <table class="table" aria-label="Tabla de peds">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="th_name">Name</th>
+                  <th scope="col" data-i18n="th_label">Label</th>
+                  <th scope="col" data-i18n="model">Model</th>
+                  <th scope="col" data-i18n="th_pos">Position</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="peds-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+
+      <div id="edit-gang-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="eg-title">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="eg-title" data-i18n="edit_selected_gang">Editar gang</h3>
+            <button id="eg-close" class="close-btn" type="button" aria-label="Cerrar" data-i18n-aria-label="close">×</button>
+          </div>
+          <div class="form">
+            <label for="eg-name" data-i18n="name_unique">Nombre (id único)</label>
+            <input id="eg-name" data-i18n-placeholder="ph_name_example" placeholder="ej. vagos" />
+
+            <label for="eg-label" data-i18n="label">Etiqueta</label>
+            <input id="eg-label" data-i18n-placeholder="ph_label_example" placeholder="ej. Vagos" />
+
+            <label for="eg-color" data-i18n="th_color">Color</label>
+            <input id="eg-color" type="color" value="#7e22ce" />
+
+            <div class="row">
+              <button id="eg-save" type="button" data-i18n="save">Guardar</button>
+              <button id="eg-cancel" class="edit-cancel" type="button" data-i18n="cancel">Cancelar</button>
+              <button id="eg-delete" class="danger" type="button" data-i18n="delete">Eliminar</button>
+            </div>
+
+            <small id="eg-msg" class="muted" aria-live="polite"></small>
+          </div>
+        </div>
+      </div>
+
+    
+      <div id="member-info-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="mi-title">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="mi-title" data-i18n="player_info">Información del jugador</h3>
+            <button id="mi-close" class="close-btn" type="button" aria-label="Cerrar" data-i18n-aria-label="close">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="info-row"><strong data-i18n="first_name">Nombre:</strong> <span id="mi-name">-</span></div>
+            <div class="info-row"><strong data-i18n="last_name">Apellido:</strong> <span id="mi-lastname">-</span></div>
+            <div class="info-row"><strong>ID:</strong> <span id="mi-cid">-</span></div>
+            <div class="info-row"><strong>FiveM:</strong> <span id="mi-fivem">-</span></div>
+            <small class="muted" data-i18n="id_disclaimer">*Los identificadores se muestran si están disponibles.</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/mock-browser.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/locales.js"></script>
+  <script src="js/create.js"></script>
+  <script src="js/edit.js"></script>
+  <script src="js/remove.js"></script>
+  <script src="js/members.js"></script>
+  <script src="js/stash.js"></script>
+  <script src="js/garage.js"></script>
+  <script src="js/clothing.js"></script>
+  <script src="js/crafting.js"></script>
+  <script src="js/shops.js"></script>
+  <script src="js/ranks.js"></script>
+  <script src="js/membersmenu.js"></script>
+  <script src="js/zones.js"></script>
+  <script src="js/peds.js"></script>
+  <script src="js/about.js"></script>
+
+  <script>
+  (function () {
+    const sel   = document.getElementById('theme-switcher');
+    const link  = document.getElementById('theme-css');
+    const input = document.getElementById('theme-import');
+    const trash = document.getElementById('theme-trash');
+    if (!sel || !link) return;
+
+    const KEY_ACTIVE  = 'theme';               // compat con lo existente
+    const KEY_CUSTOMS = 'custom-themes-v1';    // { [name]: cssText }
+
+    const tr = (key, fallback) => {
+      try {
+        if (window.gcLocales && typeof window.gcLocales.t === 'function') {
+          const v = window.gcLocales.t(key);
+          if (typeof v === 'string' && v !== key) return v;
+        }
+      } catch (e) {}
+      try {
+        if (typeof window.T === 'function') {
+          const v = window.T(key);
+          if (typeof v === 'string' && v !== key) return v;
+        }
+      } catch (e) {}
+      return fallback || key;
+    };
+
+    const BUILTINS = {
+      darkblue:'darkblue.css',
+      dark:  'dark.css',
+      light: 'light.css',
+      purple:'purple.css',
+      forest:'forest.css',
+      ocean: 'ocean.css',
+    };
+
+    const prefersDark = () =>
+      window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const getActive = () => {
+      try { return localStorage.getItem(KEY_ACTIVE) || 'darkblue'; }
+      catch (e) { return 'darkblue'; }
+    };
+
+    const setActive = (v) => {
+      try { localStorage.setItem(KEY_ACTIVE, v); } catch (e) {}
+    };
+
+    const loadCustoms = () => {
+      try { return JSON.parse(localStorage.getItem(KEY_CUSTOMS) || '{}') || {}; }
+      catch (e) { return {}; }
+    };
+
+    const saveCustoms = (obj) => {
+      try { localStorage.setItem(KEY_CUSTOMS, JSON.stringify(obj || {})); } catch (e) {}
+    };
+
+    const ensureStyleEl = () => {
+      let style = document.getElementById('custom-theme-style');
+      if (!style) {
+        style = document.createElement('style');
+        style.id = 'custom-theme-style';
+        document.head.appendChild(style);
+      }
+      return style;
+    };
+
+    const clearCustomStyle = () => {
+      const style = document.getElementById('custom-theme-style');
+      if (style) style.remove();
+    };
+
+    const setHrefWithFallback = (file) => {
+      const candidates = [`themes/${file}`, `${file}`];
+      let i = 0;
+      link.onerror = null;
+      const setHref = (href) => {
+        if (href && link.getAttribute('href') !== href) link.setAttribute('href', href);
+      };
+      link.onerror = () => {
+        i += 1;
+        if (i < candidates.length) setHref(candidates[i]);
+      };
+      setHref(candidates[0]);
+    };
+
+    const apply = (value) => {
+      const val = value || getActive();
+
+      if (val === 'import') {
+
+        sel.value = getActive();
+        return;
+      }
+
+      if (val.startsWith('custom:')) {
+        const name = val.slice('custom:'.length);
+        const customs = loadCustoms();
+        const css = customs[name];
+        if (typeof css === 'string') {
+          const style = ensureStyleEl();
+          style.innerHTML = css;
+          link.onerror = null;
+          link.setAttribute('href', '');
+          sel.value = val;
+          setTrashEnabled(true);
+          return;
+        }
+        setActive('darkblue');
+        apply('darkblue');
+        return;
+      }
+
+      const file = BUILTINS[val] || BUILTINS.darkblue;
+      clearCustomStyle();
+      setHrefWithFallback(file);
+      sel.value = val;
+      setTrashEnabled(false);
+    };
+
+    const rebuildOptions = () => {
+      const current = getActive();
+      const customs = loadCustoms();
+      const names = Object.keys(customs).sort((a,b)=>a.localeCompare(b, undefined, {sensitivity:'base'}));
+
+      const existing = Array.from(sel.options).map(o => o.value);
+      if (!existing.includes('import')) {
+        const opt = document.createElement('option');
+        opt.value = 'import';
+        opt.textContent = tr('theme_import', 'Importar theme...');
+        sel.appendChild(opt);
+      }
+
+      Array.from(sel.options).forEach(o => {
+        if (o.value && o.value.startsWith('custom:')) o.remove();
+        if (o.value === '__custom_sep__') o.remove();
+      });
+
+      const importOpt = Array.from(sel.options).find(o => o.value === 'import') || null;
+
+      if (names.length) {
+        const sep = document.createElement('option');
+        sep.value = '__custom_sep__';
+        sep.textContent = '──────────';
+        sep.disabled = true;
+        sel.insertBefore(sep, importOpt);
+
+        names.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = `custom:${name}`;
+          opt.textContent = `★ ${name}`;
+          sel.insertBefore(opt, importOpt);
+        });
+      }
+
+      const hasCurrent = Array.from(sel.options).some(o => o.value === current);
+      if (hasCurrent) sel.value = current;
+    };
+
+    const setTrashEnabled = (enabled) => {
+      if (!trash) return;
+      trash.disabled = !enabled;
+      trash.style.opacity = enabled ? '' : '0.5';
+      trash.style.cursor = enabled ? '' : 'not-allowed';
+      const t = tr('theme_delete', 'Borrar theme');
+      trash.setAttribute('title', t);
+      trash.setAttribute('aria-label', t);
+    };
+
+    
+    const gcPromptThemeName = (defName) => {
+      return new Promise((resolve) => {
+        const modal   = document.getElementById('theme-name-modal');
+        const input   = document.getElementById('theme-name-input');
+        const btnSave = document.getElementById('theme-name-save');
+        const btnCancel = document.getElementById('theme-name-cancel');
+        const btnClose  = document.getElementById('theme-name-close');
+        const msgEl   = document.getElementById('theme-name-msg');
+        const titleEl = document.getElementById('theme-name-title');
+
+        if (!modal || !input || !btnSave || !btnCancel || !btnClose) {
+          resolve(null);
+          return;
+        }
+
+        const title = tr('theme_name_title', 'Guardar theme');
+        const label = tr('theme_name_label', 'Nombre del theme');
+        const placeholder = tr('theme_name_placeholder', 'MiTheme');
+        const invalidMsg  = tr('theme_name_invalid', 'Poné un nombre válido.');
+
+        if (titleEl) titleEl.textContent = title;
+        const labelEl = modal.querySelector('label[for="theme-name-input"]');
+        if (labelEl) labelEl.textContent = label;
+        input.placeholder = placeholder;
+
+        if (msgEl) msgEl.textContent = '';
+        input.value = (defName || 'MiTheme');
+
+        const cleanup = () => {
+          btnSave.onclick = null;
+          btnCancel.onclick = null;
+          btnClose.onclick = null;
+          modal.onclick = null;
+          document.removeEventListener('keydown', onKeyDown);
+          modal.classList.add('hidden');
+        };
+
+        const finish = (val) => {
+          cleanup();
+          resolve(val);
+        };
+
+        const onKeyDown = (e) => {
+          if (e.key === 'Escape') return finish(null);
+          if (e.key === 'Enter') return btnSave.click();
+        };
+
+        btnSave.onclick = () => {
+          const name = (input.value || '').trim();
+          if (!name) {
+            if (msgEl) msgEl.textContent = invalidMsg;
+            input.focus();
+            return;
+          }
+          finish(name);
+        };
+
+        const cancel = () => finish(null);
+        btnCancel.onclick = cancel;
+        btnClose.onclick = cancel;
+
+        modal.onclick = (e) => {
+          if (e.target === modal) cancel();
+        };
+
+        document.addEventListener('keydown', onKeyDown);
+
+        modal.classList.remove('hidden');
+        setTimeout(() => input.focus(), 0);
+      });
+    };
+
+    const defaultNameFromFile = (file) => {
+      const n = (file && file.name) ? file.name : 'MiTheme.css';
+      return n.replace(/\.css$/i, '');
+    };
+
+    const confirmUI = async (message) => {
+      if (typeof window.gcConfirm === 'function') {
+        try {
+          return await window.gcConfirm({
+            title: 'Confirmar eliminación',
+            message: message || '¿Seguro?'
+          });
+        } catch (_) {}
+      }
+      return window.confirm(message || '¿Seguro?');
+    };
+
+    sel.addEventListener('change', (e) => {
+      const v = e.target.value;
+
+      if (v === 'import') {
+        const prev = getActive();
+        sel.value = prev;
+        if (input) {
+          input.value = '';
+          input.click();
+        }
+        return;
+      }
+
+      setActive(v);
+      apply(v);
+    });
+
+    if (input) {
+      input.addEventListener('change', () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          const css = ev.target && ev.target.result ? String(ev.target.result) : '';
+          const defName = defaultNameFromFile(file);
+          const name = await gcPromptThemeName(defName);
+          if (!name) { input.value = ''; return; }
+
+          const customs = loadCustoms();
+          customs[name] = css;
+          saveCustoms(customs);
+
+          const val = `custom:${name}`;
+          setActive(val);
+          rebuildOptions();
+          apply(val);
+
+          input.value = '';
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    if (trash) {
+      trash.addEventListener('click', async () => {
+        const val = sel.value || getActive();
+        if (!val.startsWith('custom:')) return;
+
+        const name = val.slice('custom:'.length);
+        const ok = await confirmUI(`¿Borrar el theme "${name}"?`);
+        if (!ok) return;
+
+        const customs = loadCustoms();
+        delete customs[name];
+        saveCustoms(customs);
+
+        const next = (getActive() === val) ? 'darkblue' : getActive();
+        setActive(next);
+
+        rebuildOptions();
+        apply(next);
+      });
+
+      setTrashEnabled((getActive() || '').startsWith('custom:'));
+    }
+
+    rebuildOptions();
+    apply(getActive());
+
+    window.__setTheme = (v) => { setActive(v); rebuildOptions(); apply(v); };
+  })();
+  </script>
+
+
+  <script>
+  (function() {
+    const tabs = document.querySelectorAll('.tabs .tab');
+    const views = document.querySelectorAll('.tab-content');
+    const addBtn = document.getElementById('btn-add');
+
+    function show(tabKey) {
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabKey));
+      views.forEach(v => v.classList.toggle('hidden', v.id !== 'tab-' + tabKey));
+      if (addBtn) addBtn.style.display = (tabKey === 'gangs') ? '' : 'none';
+    }
+
+    if (!window.GC?.__customTabNavigation) {
+      tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.tab)));
+      show('gangs');
+    }
+  })();
+  </script>
+
+  <div id="info-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="about-title">
+    <div class="modal-content about-modal-content">
+      <div class="modal-header about-modal-header">
+        <div class="about-header-copy">
+          <h3 id="about-title">About</h3>
+        </div>
+        <button id="info-close" class="close-btn about-close-btn" aria-label="Cerrar" data-i18n-aria-label="close">×</button>
+      </div>
+
+      <div class="modal-body about-modal-body">
+        <div class="about-grid">
+          <div class="about-side-stack">
+            <section class="about-card about-card-author">
+              <span class="about-card-label">Author</span>
+              <div class="about-author">
+                <div class="about-avatar">FD</div>
+                <div class="author-meta">
+                  <div class="author-name">FenixDesign</div>
+                  <div class="author-desc muted">Developer of the script</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="about-card about-card-socials">
+              <div class="about-card-head">
+                <span class="about-card-label">Social networks</span>
+              </div>
+              <div class="socials about-socials-grid">
+                <a class="icon-link about-social-link" href="https://github.com/IamFenixDesign" target="_blank" rel="noopener noreferrer" data-external>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.35-1.76-1.35-1.76-1.1-.76.08-.74.08-.74 1.22.09 1.86 1.26 1.86 1.26 1.08 1.84 2.83 1.31 3.52 1 .11-.79.42-1.31.76-1.61-2.66-.3-5.46-1.33-5.46-5.91 0-1.31.47-2.38 1.25-3.22-.12-.31-.54-1.55.12-3.22 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.67.24 2.91.12 3.22.78.84 1.25 1.91 1.25 3.22 0 4.6-2.81 5.6-5.49 5.9.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z"/>
+                  </svg>
+                  <span>GitHub</span>
+                </a>
+
+                <a class="icon-link about-social-link" href="https://discord.gg/tThVV3MSrj" target="_blank" rel="noopener noreferrer" data-external>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.32 4.37A19.9 19.9 0 0 0 15.79 3l-.23.42a18.3 18.3 0 0 1 4.21 1.59 15.8 15.8 0 0 0-5.5-1.76 16.5 16.5 0 0 0-3.54 0A15.8 15.8 0 0 0 5.23 5 18.3 18.3 0 0 1 9.44 3.4L9.21 3A19.9 19.9 0 0 0 4.68 4.36 21.5 21.5 0 0 0 1.7 16.13s2.1 3.6 7.63 3.87l.96-1.23c-1.66-.5-2.77-1.38-2.77-1.38l.44-.35s1.8 1.3 4.04 1.3 4.04-1.3 4.04-1.3l.44.35s-1.11.88-2.77 1.38l.96 1.23c5.53-.27 7.63-3.87 7.63-3.87a21.5 21.5 0 0 0-2.98-11.76ZM9.5 14.2c-.78 0-1.42-.72-1.42-1.6 0-.89.64-1.6 1.42-1.6s1.42.71 1.42 1.6c0 .88-.64 1.6-1.42 1.6Zm5 0c-.78 0-1.42-.72-1.42-1.6 0-.89.64-1.6 1.42-1.6s1.42.71 1.42 1.6c0 .88-.64 1.6-1.42 1.6Z"/>
+                  </svg>
+                  <span>Discord</span>
+                </a>
+
+                <a class="icon-link about-social-link" href="https://x.com/iamfenixdesign" target="_blank" rel="noopener noreferrer" data-external>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.9 2H22l-7.07 8.08L23.5 22h-6.9l-5.4-7.07L4 22H1l7.57-8.65L.5 2h7l4.87 6.49L18.9 2Zm-1.2 18h1.9L7.4 4H5.5l12.2 16Z"/>
+                  </svg>
+                  <span>X / Twitter</span>
+                </a>
+
+                <a class="icon-link about-social-link" href="https://fenixdesign.gitlab.io/web/#welcome" target="_blank" rel="noopener noreferrer" data-external>
+                  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                    <path d="M12 2a10 10 0 1 0 0.001 20.001A10 10 0 0 0 12 2Zm7.93 9h-3.18 a15.7 15.7 0 0 0-1.43-5.01A8.03 8.03 0 0 1 19.93 11ZM12 4 c.9 1.26 1.6 2.97 2 5H10c.4-2.03 1.1-3.74 2-5Zm-2.89 1.99 A15.7 15.7 0 0 0 7.25 11H4.07a8.03 8.03 0 0 1 4.61-5.01ZM4.07 13 h3.18c.23 1.75.76 3.42 1.43 5.01A8.03 8.03 0 0 1 4.07 13ZM12 20 c-.9-1.26-1.6-2.97-2-5h4c-.4 2.03-1.1 3.74-2 5Zm2.89-1.99 a15.7 15.7 0 0 0 1.43-5.01h3.18a8.03 8.03 0 0 1-4.61 5.01Z"/>
+                  </svg>
+                  <span>Website</span>
+                </a>
+              </div>
+            </section>
+          </div>
+
+          <section class="about-card about-card-changelog">
+            <div class="about-card-topline"></div>
+            <div class="about-card-head about-card-head-inline about-card-head-changelog">
+              <div>
+                <span class="about-card-label">Updates &amp; Changelogs</span>
+                <p class="about-card-note muted">Version history and latest changes.</p>
+              </div>
+              <div id="changelog-controls" class="changelog-controls">
+                <label for="changelog-select">Choose version:</label>
+                <select id="changelog-select"></select>
+              </div>
+            </div>
+            <div class="changelog-shell">
+              <ul class="changelog" id="changelog"></ul>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gc-confirm-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-content gc-confirm-content" role="dialog" aria-modal="true" aria-labelledby="gc-confirm-title" aria-describedby="gc-confirm-message" tabindex="-1">
+      <div class="modal-header">
+        <h3 id="gc-confirm-title">Confirmar acción</h3>
+        <button type="button" class="close-btn" id="gc-confirm-close" aria-label="Cerrar" data-i18n-aria-label="close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="gc-confirm-message" class="muted">¿Estás seguro?</p>
+      </div>
+      <div class="gc-confirm-actions">
+        <button type="button" class="btn" id="gc-confirm-cancel" data-i18n="cancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="gc-confirm-ok" data-i18n="confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    const modal = document.getElementById('gc-confirm-modal');
+    const dialog = modal?.querySelector('.gc-confirm-content');
+    const titleEl = document.getElementById('gc-confirm-title');
+    const msgEl = document.getElementById('gc-confirm-message');
+    const btnOk = document.getElementById('gc-confirm-ok');
+    const btnCancel = document.getElementById('gc-confirm-cancel');
+    const btnClose = document.getElementById('gc-confirm-close');
+
+    if (!modal || !dialog || !titleEl || !msgEl || !btnOk || !btnCancel || !btnClose) return;
+
+    const t = (key, fallback='') => {
+      try {
+        const i18n = window.gcLocales;
+        if (i18n && typeof i18n.t === 'function') {
+          return i18n.t(key) || fallback;
+        }
+      } catch (_) {}
+      return fallback;
+    };
+
+    let pendingResolve = null;
+    let lastFocus = null;
+    const allowOnce = new WeakSet();
+
+    const openModal = ({ title, message }) => {
+      lastFocus = document.activeElement;
+      titleEl.textContent = title || t('confirm_action', 'Confirmar acción');
+      msgEl.textContent = message || t('confirm_generic', '¿Estás seguro?');
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => dialog.focus(), 0);
+    };
+
+    const closeModal = (result) => {
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden', 'true');
+      const resolve = pendingResolve;
+      pendingResolve = null;
+      try { lastFocus?.focus?.(); } catch (_) {}
+      lastFocus = null;
+      if (resolve) resolve(!!result);
+    };
+
+    const gcConfirm = ({ title, message }) => new Promise((resolve) => {
+      if (pendingResolve) pendingResolve(false);
+      pendingResolve = resolve;
+      openModal({ title, message });
+    });
+
+    window.gcConfirm = gcConfirm;
+
+    btnOk.addEventListener('click', () => closeModal(true));
+    btnCancel.addEventListener('click', () => closeModal(false));
+    btnClose.addEventListener('click', () => closeModal(false));
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (modal.classList.contains('hidden')) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeModal(false);
+      } else if (e.key === 'Enter') {
+        const a = document.activeElement;
+        if (a === btnCancel || a === btnClose) return;
+        e.preventDefault();
+        closeModal(true);
+      }
+    });
+
+    document.addEventListener('click', async (e) => {
+      const target = e.target?.closest?.('button, a, [role="button"]');
+      if (!target) return;
+
+      if (allowOnce.has(target)) {
+        allowOnce.delete(target);
+        return;
+      }
+
+      const id = (target.id || '').toLowerCase();
+      const cls = (target.className || '').toString().toLowerCase();
+      const txt = (target.textContent || '').trim().toLowerCase();
+
+      const looksLikeDelete =
+        /(delete|remove|del|borrar|eliminar|quitar)/.test(id) ||
+        /(delete|remove|del|borrar|eliminar|quitar)/.test(cls) ||
+        /^(borrar|eliminar|quitar|remove|delete|del)$/i.test(txt);
+
+      // ✅ SOLO confirmar cuando sea eliminar
+      const needsConfirm = looksLikeDelete;
+      if (!needsConfirm) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation?.();
+
+      const ok = await gcConfirm({
+        title: t('confirm_delete_title', 'Confirmar eliminación'),
+        message: t('confirm_delete_message', '¿Seguro que querés eliminar esto? Esta acción no se puede deshacer.')
+      });
+
+      if (!ok) return;
+
+      allowOnce.add(target);
+      target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    }, true);
+  })();
+  </script>
+
+  <div id="theme-name-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="theme-name-title">
+    <div class="modal-content" style="width: 420px;">
+      <div class="modal-header">
+        <h3 id="theme-name-title">Guardar theme</h3>
+        <button id="theme-name-close" class="close-btn" type="button" aria-label="Cerrar" data-i18n-aria-label="close">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label for="theme-name-input">Nombre del theme</label>
+        <input id="theme-name-input" type="text" placeholder="MiTheme" />
+
+        <div class="modal-actions">
+          <button id="theme-name-cancel" class="secondary" type="button">Cancelar</button>
+          <button id="theme-name-save" class="btn-primary" type="button">Guardar</button>
+        </div>
+
+        <small id="theme-name-msg" class="muted" aria-live="polite"></small>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

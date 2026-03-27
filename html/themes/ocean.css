@@ -1,0 +1,79 @@
+/* Unified theme tokens */
+:root{
+  --win-bg:#091123;
+  --surface:#0b1224;
+  --surface-2:#12203f;
+  --surface-3:#18305a;
+
+  --accent:#5eead4;
+  --accent-strong:#22d3ee;
+  --accent-glow:rgba(94,234,212,0.22);
+  --primary-contrast:#041018;
+
+  --border:rgba(255,255,255,0.14);
+  --border-soft:rgba(255,255,255,0.08);
+
+  --text:#e8f1ff;
+  --text-muted:#9cb3d9;
+  --text-strong:#ffffff;
+
+  --radius:20px;
+  --shadow:0 20px 52px rgba(8, 14, 28, 0.30);
+
+  --titlebar-bg:var(--surface-2);
+  --tabs-bg:var(--surface);
+
+  --control-bg:var(--surface-3);
+  --control-bg-2:var(--surface-2);
+  --control-bg-hover:var(--tab-active-bg);
+
+  --tab-hover-bg:var(--surface-3);
+  --tab-active-bg:#18305a;
+
+  --table-head-bg:var(--surface-2);
+  --table-row-even:var(--surface-2);
+  --table-row-odd:var(--surface-3);
+  --table-row-hover:#18305a;
+
+  --btn-bg:var(--surface-3);
+  --btn-hover:var(--tab-active-bg);
+
+  --secondary-bg:var(--surface-2);
+  --secondary-hover:var(--surface-3);
+
+  --cancel-bg:var(--surface-2);
+
+  --modal-overlay:rgba(3,7,18,0.72);
+
+  --danger-bg:rgba(239,68,68,0.16);
+  --danger-border:#ef4444;
+  --danger-hover:#ef4444;
+  --danger-glow:rgba(239,68,68,0.34);
+
+  --dot-border:rgba(5,8,22,0.70);
+
+  --icon-link-bg:var(--surface-2);
+  --icon-link-hover-bg:var(--surface-3);
+
+
+  /* Update popup */
+  --update-indicator-bg:rgba(94,234,212,0.14);
+  --update-indicator-border:rgba(94,234,212,0.38);
+  --update-indicator-border-hover:rgba(94,234,212,0.56);
+  --update-indicator-text:#ccfbf1;
+  --update-indicator-shadow:0 8px 18px rgba(0,0,0,0.20);
+  --update-indicator-shadow-hover:0 12px 24px rgba(94,234,212,0.16);
+  --update-focus-ring:rgba(94,234,212,0.55);
+  --update-card-bg:rgba(11,18,36,0.98);
+  --update-card-border:rgba(94,234,212,0.26);
+  --update-card-text:#e8f1ff;
+  --update-card-title:#ccfbf1;
+  --update-card-close:#9cb3d9;
+  --update-card-close-hover:#ffffff;
+  --update-card-shadow:0 18px 38px rgba(0,0,0,0.34);
+  --update-card-button-bg:rgba(94,234,212,0.14);
+  --update-card-button-border:rgba(94,234,212,0.34);
+  --update-card-button-text:#ccfbf1;
+  --update-card-button-hover-bg:rgba(94,234,212,0.22);
+  --update-card-button-hover-border:rgba(94,234,212,0.46);
+}
