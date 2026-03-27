@@ -402,8 +402,6 @@
     } catch (_) {}
     return nativeFetch(input, init);
   };
-    });
-  }
 
   const style = document.createElement('style');
   style.textContent = `
